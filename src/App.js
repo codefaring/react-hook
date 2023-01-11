@@ -1,25 +1,35 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import ShowUp from './components/ShowUp';
 import './App.css';
+import useProducts from './hooks/useProducts';
 
-function App() {
+export default function App() {
+  const [checked, setChecked] = useState(false);
+  const [loading, error, products] = useProducts({ errorCheck: checked });
+  const handleChange = () => setChecked((prev) => !prev);
+
+  if (loading) return <p className='loading'>Loading.. please, wait!</p>;
+  if (error) return <p className='loading'>{error}</p>;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='main'>
+      <p style={{ width: '100%', textAlign: 'center' }}>
+        <input
+          id='checkbox'
+          type='checkbox'
+          value={checked}
+          onChange={handleChange}
+        />
+        No data, Error
+      </p>
+      {products.map((product) => (
+        <ShowUp
+          image={product.img}
+          isNew={product.isNew}
+          name={product.name}
+          price={product.price}
+        />
+      ))}
     </div>
   );
 }
-
-export default App;
